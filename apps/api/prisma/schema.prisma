@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ManagementType {
+  WEG
+  MV
+}
+
+enum UnitType {
+  APARTMENT
+  OFFICE
+  GARDEN
+  PARKING
+}
+
+enum DocumentKind {
+  TEILUNGSERKLAERUNG
+}
+
+enum PropertyStatus {
+  ACTIVE
+  DRAFT
+}
+
+model Property {
+  id              String         @id @default(uuid())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  name            String
+  managementType  ManagementType
+  status          PropertyStatus @default(ACTIVE)
+  propertyNumber  String         @unique // Generated via sequence BT-000XXX
+  managerId       String?
+  accountantId    String?
+
+  buildings       Building[]
+  units           Unit[]
+  documents       Document[]
+}
+
+model Building {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  street      String
+  houseNumber String
+  zipMode     String?
+  city        String?
+
+  units       Unit[]
+
+  @@index([propertyId])
+}
+
+model Unit {
+  id               String   @id @default(uuid())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  propertyId       String
+  property         Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  buildingId       String
+  building         Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  
+  number           String
+  type             UnitType
+  floor            String?
+  entrance         String?
+  
+  // Decimals for precision
+  size             Decimal  @db.Decimal(10, 2)
+  coOwnershipShare Decimal  @db.Decimal(10, 2)
+  
+  constructionYear Int?
+  rooms            Decimal? @db.Decimal(4, 1) // Allow 2.5 rooms
+
+  @@unique([propertyId, buildingId, number])
+  @@index([propertyId])
+  @@index([buildingId])
+}
+
+model Document {
+  id            String       @id @default(uuid())
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  propertyId    String
+  property      Property     @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  
+  kind          DocumentKind
+  originalName  String
+  mimeType      String
+  sizeBytes     Int
+  storageKey    String
+  sha256        String?
+
+  @@index([propertyId, kind])
+}

@@ -1,0 +1,11 @@
+node_modules
+dist
+build
+.next
+.DS_Store
+.env
+*.log
+coverage
+postgres-data
+*.pdf
+public/uploads

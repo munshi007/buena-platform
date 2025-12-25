@@ -1,0 +1,180 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/properties/extract": {
+      "post": {
+        "operationId": "PropertiesController_extract",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Properties"
+        ]
+      }
+    },
+    "/properties": {
+      "post": {
+        "operationId": "PropertiesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePropertyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Properties"
+        ]
+      },
+      "get": {
+        "operationId": "PropertiesController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Properties"
+        ]
+      }
+    },
+    "/properties/{id}": {
+      "get": {
+        "operationId": "PropertiesController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Properties"
+        ]
+      },
+      "patch": {
+        "operationId": "PropertiesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Properties"
+        ]
+      },
+      "delete": {
+        "operationId": "PropertiesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Properties"
+        ]
+      }
+    },
+    "/reports/stats": {
+      "get": {
+        "operationId": "ReportsController_getStats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get aggregated portfolio statistics",
+        "tags": [
+          "reports"
+        ]
+      }
+    },
+    "/reports/ai-summary": {
+      "post": {
+        "operationId": "ReportsController_generateAiSummary",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Generate AI executive summary of the portfolio",
+        "tags": [
+          "reports"
+        ]
+      }
+    },
+    "/storage/upload": {
+      "post": {
+        "operationId": "StorageController_uploadFile",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Storage"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Buena Property API",
+    "description": "API for Property Dashboard & Creation Flow",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "CreatePropertyDto": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  }
+}
