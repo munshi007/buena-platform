@@ -11,15 +11,20 @@ enum ManagementType {
   MV
 }
 
-enum UnitType {
-  APARTMENT
-  OFFICE
-  GARDEN
-  PARKING
-}
+// enum UnitType {
+//   APARTMENT
+//   OFFICE
+//   GARDEN
+//   PARKING
+// }
 
 enum DocumentKind {
   TEILUNGSERKLAERUNG
+  LEASE
+  FLOOR_PLAN
+  MAINTENANCE_RECORD
+  INSURANCE_POLICY
+  OTHER
 }
 
 enum PropertyStatus {
@@ -41,6 +46,7 @@ model Property {
   buildings       Building[]
   units           Unit[]
   documents       Document[]
+  transactions    Transaction[]
 }
 
 model Building {
@@ -69,7 +75,7 @@ model Unit {
   building         Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
   
   number           String
-  type             UnitType
+  type             String
   floor            String?
   entrance         String?
   
@@ -78,26 +84,122 @@ model Unit {
   coOwnershipShare Decimal  @db.Decimal(10, 2)
   
   constructionYear Int?
-  rooms            Decimal? @db.Decimal(4, 1) // Allow 2.5 rooms
+  rooms            Decimal? @db.Decimal(4, 1)
+
+  leases           Lease[]
 
   @@unique([propertyId, buildingId, number])
   @@index([propertyId])
   @@index([buildingId])
 }
 
+enum LeaseStatus {
+  DRAFT
+  ACTIVE
+  EXPIRED
+  TERMINATED
+}
+
+model Tenant {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  firstName String
+  lastName  String
+  email     String   @unique
+  phone     String?
+  
+  leases    Lease[]
+}
+
+model Lease {
+  id            String      @id @default(uuid())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  unitId        String
+  unit          Unit        @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  
+  tenantId      String
+  tenant        Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  startDate     DateTime
+  endDate       DateTime?
+  rentAmount    Decimal     @db.Decimal(10, 2)
+  depositAmount Decimal?    @db.Decimal(10, 2)
+  status        LeaseStatus @default(ACTIVE)
+
+  @@index([unitId])
+  @@index([tenantId])
+}
+
+enum TransactionType {
+  REVENUE
+  EXPENSE
+}
+
+enum TransactionCategory {
+  RENT
+  DEPOSIT
+  MAINTENANCE
+  TAX
+  INSURANCE
+  UTILITIES
+  OTHER
+}
+
+model Transaction {
+  id          String              @id @default(uuid())
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  
+  propertyId  String
+  property    Property            @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  
+  unitId      String?
+  
+  amount      Decimal             @db.Decimal(12, 2)
+  type        TransactionType
+  category    TransactionCategory @default(OTHER)
+  date        DateTime            @default(now())
+  description String?
+
+  @@index([propertyId])
+  @@index([type])
+  @@index([date])
+}
+
 model Document {
-  id            String       @id @default(uuid())
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  id            String            @id @default(uuid())
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
   propertyId    String
-  property      Property     @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  property      Property          @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   
   kind          DocumentKind
-  originalName  String
+  name          String
+  
+  versions      DocumentVersion[]
+
+  @@index([propertyId, kind])
+}
+
+model DocumentVersion {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  
+  documentId  String
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  
+  version     Int      @default(1)
+  originalName String
   mimeType      String
   sizeBytes     Int
   storageKey    String
   sha256        String?
+  
+  extractedData Json?
 
-  @@index([propertyId, kind])
+  @@index([documentId])
 }

@@ -9,6 +9,7 @@
 - **Portfolio Dashboard**: Real-time metrics for properties, units, and buildings.
 - **Smart Property Creation**:
     - Multi-step wizard with state preservation.
+    - **🤖 AI-Powered PDF Extraction**: Upload a "Teilungserklärung" (German property deed) and automatically extract all units, addresses, and ownership shares using GPT-4.
     - **Excel-like Unit Editor**: Paste directly from spreadsheets to create hundreds of units instantly.
     - Automatic validation and nested building support.
 - **AI-Powered Reports**:
@@ -22,17 +23,22 @@
 **Monorepo Structure** (managed via `pnpm` workspaces):
 
 - **Frontend (`apps/web`)**:
-    - Next.js 15 (App Router)
-    - TypeScript
-    - CSS Modules (No Tailwind, custom design system)
-    - `swr` / `openapi-fetch` for typed API consumption
+    - **Next.js 15** (App Router)
+    - **TypeScript** & **CSS Modules** (Custom Design System)
+    - **State Management**: `zustand` for complex wizard flows.
+    - **Testing**: `Playwright` for E2E user journeys.
+    - **API Integration**: `openapi-fetch` for type-safe API consumption.
 - **Backend (`apps/api`)**:
-    - NestJS
-    - Prisma ORM (PostgreSQL)
-    - OpenAI Integration
-    - Zod Validation
+    - **NestJS** (Modular Architecture)
+    - **Prisma ORM** (PostgreSQL with relational integrity)
+    - **OpenAI Integration**: 
+        - **GPT-4 Turbo** for intelligent PDF parsing (Teilungserklärung extraction)
+        - **GPT-4o-mini** for portfolio summary generation
+    - **Better-Sqlite3** (For fast local dev/testing if needed, though Postgres is primary)
+    - **Testing**: `Jest` + `Supertest` for API E2E reliability.
 - **Shared (`packages/shared`)**:
-    - Shared TypeScript interfaces, Enums, and Zod schemas.
+    - Single source of truth for **Enums**, **Interfaces**, and **Zod Schemas**.
+    - Ensures contract alignment between Frontend and Backend (0ms latency sync).
 
 ## ⚡ Getting Started
 

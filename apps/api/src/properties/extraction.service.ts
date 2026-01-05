@@ -108,7 +108,6 @@ export class ExtractionService {
                 parsed = JSON.parse(cleaned);
             } catch (jsonErr) {
                 console.error('JSON Parse Error:', jsonErr);
-                console.error('Raw Content:', cleaned);
                 throw new BadRequestException('Failed to parse AI response');
             }
 
@@ -117,28 +116,22 @@ export class ExtractionService {
                 units = parsed;
             } else if (parsed.units && Array.isArray(parsed.units)) {
                 units = parsed.units;
-            } else {
-                console.log('Parsed Object Keys:', Object.keys(parsed));
+            } else if (typeof parsed === 'object' && parsed !== null) {
                 // Fallback 1: search for any array in the object
                 const potentialArray = Object.values(parsed).find(val => Array.isArray(val));
                 if (potentialArray) {
-                    console.log('Found alternative array in response');
                     units = potentialArray as any[];
                 }
                 // Fallback 2: Check if the object itself is a single unit (has 'number' and 'type')
                 else if (parsed.number && parsed.type) {
-                    console.log('Response is a single unit object, wrapping in array');
                     units = [parsed];
                 }
             }
 
-            console.log('Parsed Units Count:', units.length);
             return units;
 
         } catch (error) {
-            console.error('Extraction Detailed Error:', error);
             if (error instanceof OpenAI.APIError) {
-                console.error(error.status);
                 // @ts-ignore
                 console.error(error.message);
             }

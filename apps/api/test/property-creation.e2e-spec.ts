@@ -34,8 +34,8 @@ describe('Property Creation Flow (E2E)', () => {
         accountantId: 'acc_1',
       },
       buildings: [
-        { tempId: 'temp_b1', street: 'Main St', houseNumber: '1', city: 'Berlin', zipMode: '10115' },
-        { tempId: 'temp_b2', street: 'Main St', houseNumber: '2', city: 'Berlin', zipMode: '10115' }
+        { tempId: 'temp_b1', street: 'Main St', houseNumber: '1', city: 'Berlin', zipCode: '10115' },
+        { tempId: 'temp_b2', street: 'Main St', houseNumber: '2', city: 'Berlin', zipCode: '10115' }
       ],
       units: [
         {
@@ -43,7 +43,6 @@ describe('Property Creation Flow (E2E)', () => {
           number: '1.01',
           type: UnitType.APARTMENT,
           floor: '1',
-          entrance: 'A',
           size: 55.5,
           coOwnershipShare: 12.5,
           rooms: 2

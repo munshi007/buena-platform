@@ -3,8 +3,14 @@ import { ReportsModule } from './reports/reports.module';
 import { PropertiesModule } from './properties/properties.module';
 import { StorageModule } from './storage/storage.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { TenantsModule } from './tenants/tenants.module';
+import { LeasesModule } from './leases/leases.module';
+import { FinancesModule } from './finances/finances.module';
+import { DocumentsModule } from './documents/documents.module';
 
 import { ConfigModule } from '@nestjs/config';
+
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -12,9 +18,13 @@ import { ConfigModule } from '@nestjs/config';
     PropertiesModule,
     ReportsModule,
     StorageModule,
-    PrismaModule
+    PrismaModule,
+    TenantsModule,
+    LeasesModule,
+    FinancesModule,
+    DocumentsModule
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule { }

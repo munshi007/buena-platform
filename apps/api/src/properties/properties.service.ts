@@ -3,14 +3,36 @@ import { PrismaService } from '../prisma/prisma.service';
 // import { PropertyStatus as PrismaPropertyStatus } from '@prisma/client';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { UnitType, ManagementType, PropertyStatus } from '@buena/shared';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class PropertiesService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly emailService: EmailService,
+  ) { }
 
   async findAll() {
     return this.prisma.property.findMany({
-      include: { buildings: true, units: true },
+      include: {
+        buildings: true,
+        units: {
+          include: {
+            leases: {
+              include: {
+                tenant: true,
+              },
+            },
+          },
+        },
+        documents: {
+          include: {
+            versions: {
+              orderBy: { version: 'desc' },
+            },
+          },
+        },
+      },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -18,7 +40,25 @@ export class PropertiesService {
   async findOne(id: string) {
     const property = await this.prisma.property.findUnique({
       where: { id },
-      include: { buildings: true, units: true },
+      include: {
+        buildings: true,
+        units: {
+          include: {
+            leases: {
+              include: {
+                tenant: true,
+              },
+            },
+          },
+        },
+        documents: {
+          include: {
+            versions: {
+              orderBy: { version: 'desc' },
+            },
+          },
+        },
+      },
     });
     if (!property) throw new BadRequestException('Property not found');
     return property;
@@ -84,7 +124,7 @@ export class PropertiesService {
               where: { id: u.id },
               data: {
                 number: u.number,
-                type: u.type as UnitType,
+                type: u.type,
                 floor: u.floor,
                 entrance: u.entrance,
                 size: u.size,
@@ -161,7 +201,7 @@ export class PropertiesService {
             propertyId: property.id,
             buildingId: tempIdMap.get(u.buildingTempId)!,
             number: u.number,
-            type: u.type as UnitType,
+            type: u.type,
             floor: u.floor,
             entrance: u.entrance,
             size: u.size,
@@ -174,6 +214,15 @@ export class PropertiesService {
             data: unitsData,
           });
         }
+
+        // Send email notification (non-blocking)
+        this.emailService.sendPropertyCreatedNotification({
+          propertyName: property.name,
+          propertyNumber: property.propertyNumber,
+          unitCount: units.length,
+          buildingCount: buildings.length,
+          recipient: 'manager@buena-platform.com', // TODO: Use actual user email
+        }).catch(err => console.error('Email notification failed:', err));
 
         return property;
       });

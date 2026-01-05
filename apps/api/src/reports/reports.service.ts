@@ -13,10 +13,14 @@ export class ReportsService {
     }
 
     async getStats() {
-        const [properties, buildings, units] = await Promise.all([
-            this.prisma.property.findMany({ select: { managementType: true, id: true, documents: { select: { kind: true } } } }),
+        const [properties, buildings, units, tenants, documents, transactions, leases] = await Promise.all([
+            this.prisma.property.findMany({ select: { managementType: true, id: true } }),
             this.prisma.building.count(),
             this.prisma.unit.findMany({ select: { type: true, size: true, rooms: true } }),
+            this.prisma.tenant.count(),
+            this.prisma.document.findMany({ select: { kind: true } }),
+            this.prisma.transaction.findMany({ select: { amount: true, type: true } }),
+            this.prisma.lease.count({ where: { status: 'ACTIVE' } }),
         ]);
 
         const totalPortfolioSize = units.reduce((acc, u) => acc + Number(u.size), 0);
@@ -32,15 +36,38 @@ export class ReportsService {
             return acc;
         }, {} as Record<string, number>);
 
+        // Financials
+        const totalIncome = transactions
+            .filter(t => t.type === 'INCOME')
+            .reduce((acc, t) => acc + Number(t.amount), 0);
+        const totalExpenses = transactions
+            .filter(t => t.type === 'EXPENSE')
+            .reduce((acc, t) => acc + Number(t.amount), 0);
+
+        // Document Breakdown
+        const docBreakdown = documents.reduce((acc, doc) => {
+            acc[doc.kind] = (acc[doc.kind] || 0) + 1;
+            return acc;
+        }, {} as Record<string, number>);
+
         return {
             totalProperties: properties.length,
             totalBuildings: buildings,
             totalUnits: units.length,
+            totalTenants: tenants,
+            activeLeases: leases,
+            occupancyRate: units.length > 0 ? Math.round((leases / units.length) * 100) : 0,
+            financials: {
+                income: totalIncome,
+                expenses: totalExpenses,
+                net: totalIncome - totalExpenses,
+            },
             managementSplit: [
                 { type: 'WEG', count: wegCount },
                 { type: 'MV', count: mvCount },
             ],
             unitTypeSplit: Object.entries(unitTypeCounts).map(([type, count]) => ({ type, count })),
+            documentSplit: Object.entries(docBreakdown).map(([kind, count]) => ({ kind, count })),
             averageUnitSize: Math.round(averageUnitSize * 100) / 100,
             totalPortfolioSize: Math.round(totalPortfolioSize * 100) / 100,
         };
