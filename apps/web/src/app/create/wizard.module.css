@@ -1,0 +1,211 @@
+/* Main Container */
+.container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* Header & Stepper */
+.header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 2rem;
+    letter-spacing: -0.025em;
+}
+
+.stepper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.stepItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
+    z-index: 1;
+}
+
+.stepCircle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.stepLabel {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #94a3b8;
+    transition: color 0.3s ease;
+}
+
+/* Active State */
+.stepItemActive .stepCircle {
+    background: hsl(var(--primary));
+    color: white;
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
+}
+
+.stepItemActive .stepLabel {
+    color: #0f172a;
+}
+
+/* Completed State */
+.stepItemCompleted .stepCircle {
+    background: #10b981;
+    /* Emerald-500 */
+    border-color: #10b981;
+    color: white;
+}
+
+.stepLine {
+    flex-grow: 1;
+    height: 2px;
+    background: #e2e8f0;
+    margin: 0 0.5rem;
+}
+
+/* Content Card */
+.content {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    padding: 2.5rem;
+    border: 1px solid #e2e8f0;
+    min-height: 400px;
+}
+
+/* Form Elements */
+.formGroup {
+    margin-bottom: 1.5rem;
+}
+
+.label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #334155;
+    margin-bottom: 0.5rem;
+}
+
+.input,
+.select {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.9375rem;
+    color: #0f172a;
+    transition: all 0.2s;
+    background: white;
+}
+
+.input:focus,
+.select:focus {
+    outline: none;
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.input::placeholder {
+    color: #94a3b8;
+}
+
+/* Spreadsheet Specifics */
+.spreadsheetContainer {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 600px;
+}
+
+.row {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-bottom: 1px solid #f1f5f9;
+    align-items: center;
+}
+
+.col {
+    flex: 1;
+}
+
+/* Buttons */
+.actions {
+    margin-top: 2.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 1.5rem;
+}
+
+.button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    background: hsl(var(--primary));
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button:hover {
+    background-color: #4338ca;
+    transform: translateY(-1px);
+}
+
+.button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.buttonSecondary {
+    background: white;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+}
+
+.buttonSecondary:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    color: #0f172a;
+}
+
+.error {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #b91c1c;
+    font-size: 0.875rem;
+}

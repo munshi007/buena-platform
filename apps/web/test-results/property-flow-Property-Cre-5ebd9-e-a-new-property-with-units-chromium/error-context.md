@@ -1,0 +1,109 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]: B
+          - text: Buena
+        - navigation [ref=e7]:
+          - link "📊 Dashboard" [ref=e8] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e9]: 📊
+            - text: Dashboard
+          - link "🏢 Properties" [ref=e10] [cursor=pointer]:
+            - /url: /properties
+            - generic [ref=e11]: 🏢
+            - text: Properties
+          - link "📈 Reports" [ref=e12] [cursor=pointer]:
+            - /url: /reports
+            - generic [ref=e13]: 📈
+            - text: Reports
+          - link "⚙️ Settings" [ref=e14] [cursor=pointer]:
+            - /url: /settings
+            - generic [ref=e15]: ⚙️
+            - text: Settings
+        - generic [ref=e16]:
+          - generic [ref=e17]: JD
+          - generic [ref=e18]:
+            - generic [ref=e19]: John Doe
+            - generic [ref=e20]: Property Manager
+    - main [ref=e21]:
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - heading "Create New Property" [level=1] [ref=e24]
+          - generic [ref=e25]:
+            - generic [ref=e26]:
+              - generic [ref=e27]: ✓
+              - generic [ref=e28]: General
+            - generic [ref=e30]:
+              - generic [ref=e31]: "2"
+              - generic [ref=e32]: Buildings
+            - generic [ref=e34]:
+              - generic [ref=e35]: "3"
+              - generic [ref=e36]: Units
+        - generic [ref=e38]:
+          - heading "Buildings" [level=2] [ref=e39]
+          - paragraph [ref=e40]: Define the buildings managed under this property.
+          - generic [ref=e41]:
+            - generic [ref=e42]:
+              - heading "Building 1" [level=3] [ref=e43]
+              - button "Remove" [ref=e44] [cursor=pointer]
+            - generic [ref=e45]:
+              - generic [ref=e47]:
+                - generic [ref=e48]: Street
+                - textbox "Main St" [ref=e49]: Test Street
+              - generic [ref=e51]:
+                - generic [ref=e52]: No.
+                - textbox "12A" [ref=e53]: "1"
+            - generic [ref=e54]:
+              - generic [ref=e56]:
+                - generic [ref=e57]: Zip/PLZ
+                - textbox [active] [ref=e58]: "10000"
+              - generic [ref=e60]:
+                - generic [ref=e61]: City
+                - textbox [ref=e62]: Berlin
+          - generic [ref=e63]:
+            - generic [ref=e64]:
+              - heading "Building 2" [level=3] [ref=e65]
+              - button "Remove" [ref=e66] [cursor=pointer]
+            - generic [ref=e67]:
+              - generic [ref=e69]:
+                - generic [ref=e70]: Street
+                - textbox "Main St" [ref=e71]
+              - generic [ref=e73]:
+                - generic [ref=e74]: No.
+                - textbox "12A" [ref=e75]
+            - generic [ref=e76]:
+              - generic [ref=e78]:
+                - generic [ref=e79]: Zip/PLZ
+                - textbox [ref=e80]
+              - generic [ref=e82]:
+                - generic [ref=e83]: City
+                - textbox [ref=e84]
+          - button "+ Add Building" [ref=e85] [cursor=pointer]
+          - generic [ref=e86]: "{}"
+        - generic [ref=e87]:
+          - button "Back" [ref=e88] [cursor=pointer]
+          - button "Save Draft" [ref=e89] [cursor=pointer]
+          - button "Next Step" [ref=e90] [cursor=pointer]
+        - generic [ref=e92]:
+          - heading "Resume Editing?" [level=3] [ref=e93]
+          - paragraph [ref=e94]:
+            - generic [ref=e95]:
+              - text: You have unsaved changes for
+              - strong [ref=e96]: E2E Test Property
+              - text: .
+          - generic [ref=e97]:
+            - button "Resume \"E2E Test Property\"" [ref=e98] [cursor=pointer]
+            - generic [ref=e99]:
+              - button "Save & New" [ref=e100] [cursor=pointer]
+              - button "Discard" [ref=e101] [cursor=pointer]
+            - link "or view all drafts" [ref=e103] [cursor=pointer]:
+              - /url: /properties?tab=draft
+  - button "Open Next.js Dev Tools" [ref=e109] [cursor=pointer]:
+    - img [ref=e110]
+  - alert [ref=e113]
+```

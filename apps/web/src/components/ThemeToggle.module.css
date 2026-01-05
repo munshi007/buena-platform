@@ -1,0 +1,25 @@
+.toggle {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 0.625rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    /* slate-400 */
+    width: 40px;
+    height: 40px;
+}
+
+.toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.toggle:active {
+    transform: scale(0.95);
+}
