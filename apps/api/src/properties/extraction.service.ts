@@ -18,8 +18,8 @@ export class ExtractionService {
         // Potential paths to check
         const candidates = [
             path.join(process.cwd(), 'uploads', filename),
-            path.join(process.cwd(), '..', '..', 'uploads', filename), // If in apps/api but cwd is weird
-            path.join(__dirname, '..', '..', '..', 'uploads', filename), // From /dist/properties/ to root uploads?
+            path.join(process.cwd(), '..', '..', 'uploads', filename), 
+            path.join(__dirname, '..', '..', '..', 'uploads', filename), 
             path.resolve('./uploads', filename)
         ];
 

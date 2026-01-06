@@ -16,12 +16,27 @@ export class ReportsService {
         const [properties, buildings, units, tenants, documents, transactions, leases] = await Promise.all([
             this.prisma.property.findMany({ select: { managementType: true, id: true } }),
             this.prisma.building.count(),
-            this.prisma.unit.findMany({ select: { type: true, size: true, rooms: true } }),
+            this.prisma.unit.findMany({ select: { id: true, type: true, size: true, rooms: true } }),
             this.prisma.tenant.count(),
             this.prisma.document.findMany({ select: { kind: true } }),
             this.prisma.transaction.findMany({ select: { amount: true, type: true } }),
-            this.prisma.lease.count({ where: { status: 'ACTIVE' } }),
+            this.prisma.lease.findMany({ where: { status: 'ACTIVE' }, select: { rentAmount: true } }),
         ]);
+
+        const activeLeasesCount = leases.length;
+        const totalRentRoll = leases.reduce((acc, l) => acc + Number(l.rentAmount), 0);
+
+        // Annualized Portfolio Value based on Rent Roll
+        const annualizedValue = totalRentRoll * 12;
+
+        console.log('REPORTS_STATS_DEBUG:', {
+            properties: properties.length,
+            units: units.length,
+            tenants,
+            activeLeases: activeLeasesCount,
+            monthlyRentRoll: totalRentRoll,
+            transactions: transactions.length
+        });
 
         const totalPortfolioSize = units.reduce((acc, u) => acc + Number(u.size), 0);
         const averageUnitSize = units.length > 0 ? totalPortfolioSize / units.length : 0;
@@ -38,10 +53,10 @@ export class ReportsService {
 
         // Financials
         const totalIncome = transactions
-            .filter(t => t.type === 'INCOME')
+            .filter(t => t.type === 'REVENUE' as any || t.type === 'INCOME' as any)
             .reduce((acc, t) => acc + Number(t.amount), 0);
         const totalExpenses = transactions
-            .filter(t => t.type === 'EXPENSE')
+            .filter(t => t.type === 'EXPENSE' as any)
             .reduce((acc, t) => acc + Number(t.amount), 0);
 
         // Document Breakdown
@@ -55,12 +70,13 @@ export class ReportsService {
             totalBuildings: buildings,
             totalUnits: units.length,
             totalTenants: tenants,
-            activeLeases: leases,
-            occupancyRate: units.length > 0 ? Math.round((leases / units.length) * 100) : 0,
+            activeLeases: activeLeasesCount,
+            occupancyRate: units.length > 0 ? Math.round((activeLeasesCount / units.length) * 100) : 0,
             financials: {
                 income: totalIncome,
                 expenses: totalExpenses,
                 net: totalIncome - totalExpenses,
+                portfolioValue: annualizedValue
             },
             managementSplit: [
                 { type: 'WEG', count: wegCount },

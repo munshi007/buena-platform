@@ -228,7 +228,7 @@ export default function FinancesPage() {
                   type="number"
                   style={{ width: '100%', padding: '0.625rem' }}
                   value={formData.amount}
-                  onChange={e => setFormData({ ...formData, amount: parseFloat(e.target.value) })}
+                  onChange={e => setFormData({ ...formData, amount: parseFloat(e.target.value) || 0 })}
                 />
               </div>
               <div>

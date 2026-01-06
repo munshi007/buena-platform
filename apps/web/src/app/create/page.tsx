@@ -25,6 +25,7 @@ function WizardPage() {
                 buildings,
                 units
             };
+            console.log('Saving draft payload:', payload);
 
             let result;
             if (draftId) {
@@ -67,12 +68,21 @@ function WizardPage() {
             if (!silent) alert('Draft saved successfully!');
             return true;
         } catch (e: any) {
-            console.error('Save Draft Error:', e);
-            if (e?.status) console.error('Status:', e.status);
-            if (e?.statusText) console.error('StatusText:', e.statusText);
-            if (e?.data) console.error('Data:', e.data);
+            console.error('Save Draft Exception (Full):', e);
+            console.error('Save Draft Exception Message:', e?.message);
+            console.error('Save Draft Exception Name:', e?.name);
 
-            if (!silent) alert(`Failed to save draft: ${e?.message || JSON.stringify(e)}`);
+            let displayMsg = '';
+            if (e?.data) {
+                displayMsg = JSON.stringify(e.data);
+                console.error('Save Draft Exception Data:', e.data);
+            } else if (e?.message) {
+                displayMsg = e.message;
+            } else {
+                displayMsg = JSON.stringify(e);
+            }
+
+            if (!silent) alert(`Failed to save draft: ${displayMsg}`);
             return false;
         }
     };
@@ -198,8 +208,8 @@ function WizardPage() {
     };
 
     return (
-        <div className={styles.container}>
-            <div className={styles.header}>
+        <div className={styles.container} suppressHydrationWarning>
+            <div className={styles.header} suppressHydrationWarning>
                 <h1 className={styles.title}>Create New Property</h1>
 
                 <div className={styles.stepper}>
@@ -220,7 +230,7 @@ function WizardPage() {
                 </div>
             </div>
 
-            <div className={styles.content}>
+            <div className={styles.content} suppressHydrationWarning>
                 {step === 1 && <GeneralStep />}
                 {step === 2 && <BuildingStep />}
                 {step === 3 && <UnitStep />}

@@ -426,6 +426,27 @@
         "tags": [
           "Finances"
         ]
+      },
+      "patch": {
+        "operationId": "FinancesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Finances"
+        ]
       }
     },
     "/documents/{propertyId}": {

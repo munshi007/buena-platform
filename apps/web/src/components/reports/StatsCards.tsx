@@ -13,7 +13,7 @@ export function StatsCards({ stats }: StatsProps) {
         { label: 'Avg Unit Size (m²)', value: stats.averageUnitSize, icon: Ruler },
         { label: 'Total Tenants', value: stats.totalTenants || 0, icon: Users },
         { label: 'Occupancy Rate', value: `${stats.occupancyRate || 0}%`, icon: FileText },
-        { label: 'Portfolio Value', value: '€' + (stats.financials?.net?.toLocaleString() || '0'), icon: PiggyBank },
+        { label: 'Portfolio Value', value: '€' + (stats.financials?.portfolioValue?.toLocaleString() || stats.financials?.net?.toLocaleString() || '0'), icon: PiggyBank },
     ];
 
     return (

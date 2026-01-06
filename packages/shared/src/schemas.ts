@@ -2,10 +2,10 @@ import { z } from 'zod';
 import { ManagementType, UnitType, PropertyStatus, LeaseStatus, TransactionType, TransactionCategory } from './enums';
 
 export const addressSchema = z.object({
-    street: z.string().min(1),
-    houseNumber: z.string().min(1),
-    zipMode: z.string().optional(),
-    city: z.string().optional(),
+    street: z.string().optional().or(z.literal('')),
+    houseNumber: z.string().optional().or(z.literal('')),
+    zipMode: z.string().optional().or(z.literal('')),
+    city: z.string().optional().or(z.literal('')),
 });
 
 export const buildingSchema = addressSchema.extend({
@@ -14,14 +14,14 @@ export const buildingSchema = addressSchema.extend({
 
 export const createUnitSchema = z.object({
     buildingTempId: z.string().min(1),
-    number: z.string().min(1),
-    type: z.string().min(1),
+    number: z.string().optional().or(z.literal('')),
+    type: z.string().optional().or(z.literal('')),
     floor: z.string().optional(),
     entrance: z.string().optional(),
-    size: z.number().min(0),
-    coOwnershipShare: z.number().min(0).max(1000), // e.g. 500/1000
-    constructionYear: z.number().int().min(1800).max(2100).optional(),
-    rooms: z.number().min(0).optional(),
+    size: z.number().optional().or(z.literal(0)),
+    coOwnershipShare: z.number().optional().or(z.literal(0)),
+    constructionYear: z.number().int().optional().or(z.literal(0)),
+    rooms: z.number().optional().or(z.literal(0)),
 });
 
 export const generalInfoSchema = z.object({

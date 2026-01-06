@@ -20,8 +20,15 @@ const ThemeToggle = dynamic(() => import('./ThemeToggle'), { ssr: false });
 
 export default function Sidebar() {
     const pathname = usePathname();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const isActive = (path: string) => pathname === path || pathname.startsWith(`${path}/`);
+
+    if (!mounted) return <div className={styles.sidebar} />;
 
     return (
         <div className={styles.sidebar} suppressHydrationWarning>
@@ -82,10 +89,10 @@ export default function Sidebar() {
             </div>
 
             <div className={styles.user} suppressHydrationWarning>
-                <div className={styles.avatar}>JD</div>
-                <div className={styles.userInfo}>
-                    <span className={styles.userName}>John Doe</span>
-                    <span className={styles.userRole}>Property Manager</span>
+                <div className={styles.avatar} suppressHydrationWarning>JD</div>
+                <div className={styles.userInfo} suppressHydrationWarning>
+                    <span className={styles.userName} suppressHydrationWarning>John Doe</span>
+                    <span className={styles.userRole} suppressHydrationWarning>Property Manager</span>
                 </div>
             </div>
         </div>

@@ -296,7 +296,7 @@ export default function PropertiesList({ initialProperties }: { initialPropertie
                                     <td style={{ padding: '1rem', textAlign: 'right' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '1rem' }}>
                                             {p.status === 'DRAFT' ? (
-                                                <Link href={`/create?draftId=${p.id}`} style={{ color: '#c2410c', fontSize: '0.875rem', fontWeight: 600, textDecoration: 'none' }}>
+                                                <Link href={`/create?draftId=${p.id}`} style={{ color: '#4f46e5', fontSize: '0.875rem', fontWeight: 600, textDecoration: 'none' }}>
                                                     Resume
                                                 </Link>
                                             ) : (

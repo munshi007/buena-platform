@@ -15,10 +15,10 @@ export default function GeneralStep() {
 
     // Local upload state
     const [uploading, setUploading] = useState(false);
-    const [notification, setNotification] = useState<{type: 'success' | 'error', message: string} | null>(null);
+    const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
     // Extraction state
-    const [extracting, setExtracting] = require('react').useState(false);
+    const [extracting, setExtracting] = useState(false);
 
     const onSubmit = (data: any) => {
         setGeneralInfo(data);
@@ -48,7 +48,7 @@ export default function GeneralStep() {
                     {notification.message}
                 </div>
             )}
-            
+
             <h2 className={styles.title}>General Information</h2>
 
             <div className={styles.formGroup}>
@@ -114,11 +114,11 @@ export default function GeneralStep() {
 
                                 // Store the path/filename
                                 form.setValue('documentId', json.filename); // Using filename as ID for now
-                                setNotification({type: 'success', message: 'Document uploaded successfully!'});
+                                setNotification({ type: 'success', message: 'Document uploaded successfully!' });
                                 setTimeout(() => setNotification(null), 3000);
                             } catch (err) {
                                 console.error(err);
-                                setNotification({type: 'error', message: 'Upload failed. Please try again.'});
+                                setNotification({ type: 'error', message: 'Upload failed. Please try again.' });
                                 setTimeout(() => setNotification(null), 5000);
                             } finally {
                                 setUploading(false);

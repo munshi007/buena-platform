@@ -72,6 +72,7 @@ export class PropertiesService {
   }
 
   async update(id: string, data: any) {
+    console.log('UPDATING_PROPERTY:', id, JSON.stringify(data));
     const { generalInfo, buildings, units } = data;
     const { name, managementType, managerId, accountantId, status } = generalInfo || data; // Fallback for direct flat data if any
 
@@ -142,6 +143,7 @@ export class PropertiesService {
   }
 
   async create(dto: CreatePropertyDto) {
+    console.log('CREATING_PROPERTY:', JSON.stringify(dto));
     const { generalInfo, buildings, units } = dto;
 
     // Validate tempId uniqueness and mapping existence
@@ -161,11 +163,17 @@ export class PropertiesService {
     try {
       return await this.prisma.$transaction(async (tx) => {
         // 1. Generate Property Number via Sequence
-        const seqResult = await tx.$queryRaw<{ nextval: string }[]>`SELECT nextval('property_number_seq')`;
-        const seqVal = seqResult[0].nextval;
+        const seqResult = await tx.$queryRaw<any[]>`SELECT nextval('property_number_seq') as val`;
+        console.log('Sequence result:', seqResult);
+        const seqVal = seqResult[0].val || seqResult[0].nextval;
+
+        if (!seqVal) {
+          throw new Error('Failed to generate property number sequence value');
+        }
 
         // Pad to 6 digits
         const propertyNumber = `BT-${String(seqVal).padStart(6, '0')}`;
+        console.log('Generated property number:', propertyNumber);
 
         // 2. Create Property
         const property = await tx.property.create({
@@ -186,10 +194,10 @@ export class PropertiesService {
           const createdBuilding = await tx.building.create({
             data: {
               propertyId: property.id,
-              street: b.street,
-              houseNumber: b.houseNumber,
-              zipMode: b.zipMode,
-              city: b.city,
+              street: b.street || '', // Use empty string if missing/null to satisfy potentially strict types or fallback
+              houseNumber: b.houseNumber || '',
+              zipMode: b.zipMode || null,
+              city: b.city || null,
             },
           });
           tempIdMap.set(b.tempId, createdBuilding.id);
@@ -200,18 +208,18 @@ export class PropertiesService {
           const unitsData = units.map(u => ({
             propertyId: property.id,
             buildingId: tempIdMap.get(u.buildingTempId)!,
-            number: u.number,
-            type: u.type,
+            number: u.number || null, // Convert empty string to null to avoid unique violation
+            type: u.type || null,
             floor: u.floor,
             entrance: u.entrance,
-            size: u.size,
-            coOwnershipShare: u.coOwnershipShare,
-            constructionYear: u.constructionYear,
+            size: u.size || 0,
+            coOwnershipShare: u.coOwnershipShare || 0,
+            constructionYear: u.constructionYear || null,
             rooms: u.rooms,
           }));
 
           await tx.unit.createMany({
-            data: unitsData,
+            data: unitsData as any, // Cast as any because some fields are null but Prisma types might be stricter
           });
         }
 
@@ -227,8 +235,10 @@ export class PropertiesService {
         return property;
       });
     } catch (error) {
-      console.error(error);
+      console.error('PROPERTIES_CREATE_ERROR:', error);
       const message = (error as any).message || 'Unknown error';
+      const stack = (error as any).stack;
+      console.error('Stack:', stack);
       throw new InternalServerErrorException('Transaction failed: ' + message);
     }
   }

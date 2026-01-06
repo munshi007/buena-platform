@@ -28,10 +28,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
         <div className="app-shell" suppressHydrationWarning>
-          <aside className="app-sidebar">
+          <aside className="app-sidebar" suppressHydrationWarning>
             <Sidebar />
           </aside>
-          <main className="app-main">
+          <main className="app-main" suppressHydrationWarning>
             {children}
           </main>
         </div>
